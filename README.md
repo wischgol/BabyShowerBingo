@@ -11,7 +11,10 @@ images is to simply download the registry website using, for example,
 Firefox. A shell script is provided to grab and rescale the images as
 the software assumes that the images are already scaled to fit into
 the tiles of the bingocard. Alternatively, an image tool, such as
-IrfanView can be used for this step.
+IrfanView can be used for this step. Optionally, a text file can be
+generated for an image which will then be placed as text over the
+bottom of the image. This text file needs to have the same name as the
+corresponding image but with the extension ".txt".
 
 There are a number of configuration settings at the top of the source
 file that one can tweak for optimal placement of the individual images
