@@ -39,4 +39,4 @@ is needed.
 ## Requirements
 
 This software uses OpenCV to load images and place them at their
-appropriate locations. In addition, cmake and a compile is needed.
+appropriate locations. In addition, cmake and a compiler is needed.
