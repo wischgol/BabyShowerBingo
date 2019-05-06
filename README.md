@@ -17,9 +17,9 @@ bottom of the image. This text file needs to have the same name as the
 corresponding image but with the extension ".txt".
 
 There are a number of configuration settings at the top of the source
-file that one can tweak for optimal placement of the individual images
-onto the bingo card. This includes the actual background image to be
-used as well as spacing and size parameters. Also, the number of
+file that one can use to tweak for optimal placement of the individual
+images onto the bingo card. This includes the actual background image
+to be used as well as spacing and size parameters. Also, the number of
 individual images available and bingo cards to be generated can be set
 here.
 
