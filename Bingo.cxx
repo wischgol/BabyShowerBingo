@@ -15,7 +15,9 @@
 // number of tiles per bingo card
 #define N 25
 // number of images to choose from (numbered 0 - Max-1)
-#define Max 100
+#define Max 77
+// number of bingo cards to generate
+#define NUMBEROFCARDS 55
 // number of tiles per row
 #define Width 5
 // number of tiles per column (should be the same as Width)
@@ -28,6 +30,11 @@
 #define Xdelta 240
 // delta offset between tiles in y direction
 #define Ydelta 240
+// width of input image
+#define IMAGEWIDTH 220
+// height of input image
+#define IMAGEHEIGHT 220
+
 
 std::list<int*> arraylist;
 
@@ -127,7 +134,7 @@ int checkArray (std::set<int> entry, int *array)
 int checkArray (int *array)
 {
   std::list<int*>::iterator iter = arraylist.begin ();
-  std::set<int> comp;
+  std::set<int> comp, diff;
   int i, j;
 
   while (iter != arraylist.end ()) {
@@ -174,6 +181,16 @@ int checkArray (int *array)
 	array[Width*Height-1] == (*iter)[Width*Height-1])
       return 0;
 
+    // check for entire card
+    comp.clear ();
+    diff.clear ();
+    for (i=0; i<N; i++)
+      comp.insert (array[i]);
+    for (i=0; i<N; i++)
+      comp.insert ((*iter)[i]);
+    if (comp == diff)
+      return 0;
+
     ++iter;
   }
 
@@ -189,17 +206,33 @@ void addText (cv::Mat image, int x, int y, const cv::String &text)
 
 void insert (cv::Mat small_image, cv::Mat big_image, int x, int y)
 {
-  //printf ("%d %d %d %d %d %d\n", x, y, small_image.cols, small_image.rows, big_image.cols, big_image.rows);
+  //printf ("%d %d %d %d %d %d\n", x, y, small_image.cols,
+  //small_image.rows, big_image.cols, big_image.rows);
+
+  if (small_image.cols < IMAGEWIDTH)
+    x += (IMAGEWIDTH - small_image.cols) / 2;
+  if (small_image.rows < IMAGEHEIGHT)
+    y += (IMAGEHEIGHT - small_image.rows) / 2;
   small_image.copyTo(big_image(cv::Rect(x,y,small_image.cols,
 					small_image.rows)));
 }
 
 cv::Mat loadImage (int number)
 {
-  cv::Mat result;
+  cv::Mat result, tmp;
+  cv::Size size;
   char filename[64], line[64];
   sprintf (filename, "../images/image-%d.jpg", number);
-  result = cv::imread (filename, cv::IMREAD_COLOR);
+  //printf ("../images/image-%d.jpg\n", number);
+  tmp = cv::imread (filename, cv::IMREAD_COLOR);
+  if (tmp.cols > tmp.rows) {
+    size.width = IMAGEWIDTH;
+    size.height = (IMAGEHEIGHT * tmp.rows) / tmp.cols;
+  } else {
+    size.height = IMAGEWIDTH;
+    size.width = (IMAGEHEIGHT * tmp.cols) / tmp.rows;
+  }
+  cv::resize (tmp, result, size);
 
   sprintf (filename, "../images/image-%d.txt", number);
   std::ifstream file (filename, std::ifstream::in);
@@ -237,7 +270,7 @@ int main( int argc, char *argv[] )
 
   cv::Mat bingotile, icon;
 
-  for (i=0; i<40; i++) {
+  for (i=0; i<NUMBEROFCARDS; i++) {
     sprintf (filename, "bingocard-%d.jpg", i);
 
     printf ("Generating card %s\n", filename);
